@@ -17,26 +17,6 @@ keep_md: true
     training = read.csv("pml-training.csv",na.strings=c("NA","NaN"," ",""))
     testing = read.csv("pml-testing.csv",na.strings=c("NA","NaN"," ",""))
     library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
     # only keep needed variables
     colsel = grep("belt|forearm|arm|dumbell|classe",names(training))
     trainsel=select(training, names(training)[colsel])
@@ -54,54 +34,9 @@ keep_md: true
 
 # import libraries
     library(caret)
-```
-
-```
-## Warning: package 'caret' was built under R version 3.6.3
-```
-
-```
-## Loading required package: lattice
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```r
     library(rattle)
-```
-
-```
-## Warning: package 'rattle' was built under R version 3.6.3
-```
-
-```
-## Rattle: A free graphical interface for data science with R.
-## Version 5.3.0 Copyright (c) 2006-2018 Togaware Pty Ltd.
-## Type 'rattle()' to shake, rattle, and roll your data.
-```
-
-```r
     library(forecast)
-```
-
-```
-## Warning: package 'forecast' was built under R version 3.6.3
-```
-
-```
-## Registered S3 method overwritten by 'quantmod':
-##   method            from
-##   as.zoo.data.frame zoo
-```
-
-```r
     library(e1071)
-```
-
-```
-## Warning: package 'e1071' was built under R version 3.6.3
 ```
 
 ## Modeling with Random Forest, and cross-validate with valid data set then predict the test data set. Random forest modeling took quiet some time even with parallel implementation. But accuracy is pretty higher (>99%). As expected, the in sample accuracy (which is 1 here) will be higher than the out of sample accuracy (99.23%).
@@ -110,44 +45,7 @@ keep_md: true
 ## Parallel Implementation of Random Forest
     set.seed(1234)    
     library(randomForest)
-```
-
-```
-## Warning: package 'randomForest' was built under R version 3.6.3
-```
-
-```
-## randomForest 4.6-14
-```
-
-```
-## Type rfNews() to see new features/changes/bug fixes.
-```
-
-```
-## 
-## Attaching package: 'randomForest'
-```
-
-```
-## The following object is masked from 'package:rattle':
-## 
-##     importance
-```
-
-```
-## The following object is masked from 'package:ggplot2':
-## 
-##     margin
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     combine
-```
-
-```r
+    
     # set up training run for x / y syntax because model format performs poorly
     x = TrainSet[,-40]
     y = TrainSet[,40]
@@ -155,29 +53,6 @@ keep_md: true
     # configure parallel processing
     library(parallel)
     library(doParallel)
-```
-
-```
-## Warning: package 'doParallel' was built under R version 3.6.3
-```
-
-```
-## Loading required package: foreach
-```
-
-```
-## Warning: package 'foreach' was built under R version 3.6.3
-```
-
-```
-## Loading required package: iterators
-```
-
-```
-## Warning: package 'iterators' was built under R version 3.6.3
-```
-
-```r
     cluster = makeCluster(detectCores()-1) # convention to leave 1 core for OS
     registerDoParallel(cluster) # open the cluster
     modrfCtrl = trainControl(method ="cv",number=5,allowParallel=TRUE) # Configure trainControl object
@@ -203,26 +78,6 @@ keep_md: true
 ```r
 ## XGBoost Multinomial Classification
     library(xgboost)
-```
-
-```
-## 
-## Attaching package: 'xgboost'
-```
-
-```
-## The following object is masked from 'package:rattle':
-## 
-##     xgboost
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     slice
-```
-
-```r
   # convert the response factor to an integer class starting at 0
     trainlabel = as.integer(trainclean$classe)-1
   # convert data frame to matrix
@@ -251,17 +106,17 @@ keep_md: true
 ```
 
 ```
-## [1]	train-merror:0.227573+0.014717	test-merror:0.239628+0.015447 
-## [101]	train-merror:0.000000+0.000000	test-merror:0.003313+0.001123 
-## [201]	train-merror:0.000000+0.000000	test-merror:0.002905+0.001229 
-## [301]	train-merror:0.000000+0.000000	test-merror:0.002803+0.001123 
-## [401]	train-merror:0.000000+0.000000	test-merror:0.002803+0.001233 
-## [501]	train-merror:0.000000+0.000000	test-merror:0.002752+0.001189 
-## [601]	train-merror:0.000000+0.000000	test-merror:0.002701+0.001164 
-## [701]	train-merror:0.000000+0.000000	test-merror:0.002752+0.001273 
-## [801]	train-merror:0.000000+0.000000	test-merror:0.002650+0.001223 
-## [901]	train-merror:0.000000+0.000000	test-merror:0.002650+0.001223 
-## [1000]	train-merror:0.000000+0.000000	test-merror:0.002650+0.001223
+## [1]	train-merror:0.226905+0.015292	test-merror:0.238045+0.016671 
+## [101]	train-merror:0.000000+0.000000	test-merror:0.004281+0.001599 
+## [201]	train-merror:0.000000+0.000000	test-merror:0.003262+0.001122 
+## [301]	train-merror:0.000000+0.000000	test-merror:0.003109+0.001081 
+## [401]	train-merror:0.000000+0.000000	test-merror:0.003007+0.000896 
+## [501]	train-merror:0.000000+0.000000	test-merror:0.002854+0.000889 
+## [601]	train-merror:0.000000+0.000000	test-merror:0.002752+0.000797 
+## [701]	train-merror:0.000000+0.000000	test-merror:0.002803+0.000830 
+## [801]	train-merror:0.000000+0.000000	test-merror:0.002752+0.000889 
+## [901]	train-merror:0.000000+0.000000	test-merror:0.002803+0.000947 
+## [1000]	train-merror:0.000000+0.000000	test-merror:0.002803+0.000947
 ```
 
 ```r
@@ -271,17 +126,17 @@ keep_md: true
 ```
 ## ##### xgb.cv 10-folds
 ##     iter train_merror_mean train_merror_std test_merror_mean test_merror_std
-##        1         0.2275733      0.014717371        0.2396277     0.015447003
-##        2         0.1512476      0.004393218        0.1673616     0.010715601
-##        3         0.1172322      0.003473707        0.1321465     0.007949701
-##        4         0.0947293      0.004104163        0.1101822     0.009274772
-##        5         0.0811674      0.003122887        0.0968807     0.010777809
+##        1         0.2269054      0.015291913        0.2380452    0.0166713673
+##        2         0.1534164      0.010155163        0.1678701    0.0112953816
+##        3         0.1177023      0.005869483        0.1347970    0.0079189760
+##        4         0.0929514      0.004846219        0.1111490    0.0088771524
+##        5         0.0803804      0.003510415        0.0968796    0.0079966122
 ## ---                                                                         
-##      996         0.0000000      0.000000000        0.0026502     0.001223025
-##      997         0.0000000      0.000000000        0.0026502     0.001223025
-##      998         0.0000000      0.000000000        0.0026502     0.001223025
-##      999         0.0000000      0.000000000        0.0026502     0.001223025
-##     1000         0.0000000      0.000000000        0.0026502     0.001223025
+##      996         0.0000000      0.000000000        0.0028032    0.0009472302
+##      997         0.0000000      0.000000000        0.0028032    0.0009472302
+##      998         0.0000000      0.000000000        0.0028032    0.0009472302
+##      999         0.0000000      0.000000000        0.0028032    0.0009472302
+##     1000         0.0000000      0.000000000        0.0028032    0.0009472302
 ```
 
 ## Other modelings: Decision tree modeling (rpart) is fast but accuracy is only 53%; the basic gradient boosting took sometime with accuracy 93%; Linear Discriminant Analysis (lda) is fast, but accuracy is only 56%
@@ -297,47 +152,12 @@ keep_md: true
     rpart.out = confusionMatrix(predrpart, ValidSet$classe)$overall[1] # Accuracy check
     
     # gradient boosting modeling
-    modgbm=invisible(capture.output(train(classe~.,method="gbm",data=TrainSet))) # gradient boosting
+    modgbm =train(classe~.,method="gbm",data=TrainSet,verbose=FALSE) # gradient boosting
     pred.in.gbm <- predict(modgbm, TrainSet) # predict in sample
-```
-
-```
-## Warning in is.constant(y): NAs introduced by coercion
-```
-
-```
-## Error in lastlevel + phi * lasttrend: non-numeric argument to binary operator
-```
-
-```r
     gbm.in = confusionMatrix(pred.in.gbm, TrainSet$classe)$overall[1] # in sample accuracy
-```
-
-```
-## Error in confusionMatrix(pred.in.gbm, TrainSet$classe): object 'pred.in.gbm' not found
-```
-
-```r
     predgbm <- predict(modgbm, ValidSet) # predict with ValidSet 
-```
-
-```
-## Warning in is.constant(y): NAs introduced by coercion
-```
-
-```
-## Error in lastlevel + phi * lasttrend: non-numeric argument to binary operator
-```
-
-```r
     gbm.out = confusionMatrix(predgbm, ValidSet$classe)$overall[1] # Accuracy check
-```
-
-```
-## Error in confusionMatrix.default(predgbm, ValidSet$classe): the data cannot have more levels than the reference
-```
-
-```r
+    
     #  Linear Discriminant Analysis
     modlda=train(classe~.,method="lda",data=TrainSet) 
     pred.in.lda <- predict(modlda, TrainSet) # predict in sample
@@ -350,26 +170,12 @@ keep_md: true
 
 ```r
 InAccuracy = c(rf.in,rpart.in,gbm.in,lda.in)
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'gbm.in' not found
-```
-
-```r
 OutAccuracy =c(rf.out,rpart.out,gbm.out,lda.out)
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'gbm.out' not found
-```
-
-```r
 knitr::kable(data.frame(Model=names(OutAccuracy),InSampleAccuracy=paste0(round(InAccuracy*100,2),"%"),OutofSampleAccuracy=paste0(round(OoutAccuracy*100,2),"%"), OutofSampleError=paste0(round((1-OutAccuracy)*100,2),"%")))
 ```
 
 ```
-## Error in data.frame(Model = names(OutAccuracy), InSampleAccuracy = paste0(round(InAccuracy * : object 'OutAccuracy' not found
+## Error in paste0(round(OoutAccuracy * 100, 2), "%"): object 'OoutAccuracy' not found
 ```
 
 ## Inclusion, both XGBoost and Random Forest modelig provide higher in sample and out of sample accuracy than other modeling (decision tree, basic gradient boosting, Linear Discriminant Analysis, etc.), but XGBoost modeling is way faster. So I'll choose XBGoost modeling to predict the test data set. The prediction result is listed below, which passed the final quiz with 100% score.
