@@ -3,6 +3,7 @@ title: "MachineLearningProject"
 author: "Li"
 date: "3/27/2020"
 output: html_document
+keep_md: true
 ---
 ## Get data and do explarotary analysis to clean up the data by removing all empty values and plit the training data into .75 as TrainSet for training the model and .25 as ValidSet for cross validation.
 
@@ -53,6 +54,21 @@ output: html_document
 
 # import libraries
     library(caret)
+```
+
+```
+## Warning: package 'caret' was built under R version 3.6.3
+```
+
+```
+## Loading required package: lattice
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```r
     library(rattle)
 ```
 
@@ -120,15 +136,15 @@ output: html_document
 ```
 
 ```
-## The following object is masked from 'package:dplyr':
-## 
-##     combine
-```
-
-```
 ## The following object is masked from 'package:ggplot2':
 ## 
 ##     margin
+```
+
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     combine
 ```
 
 ```r
@@ -139,6 +155,29 @@ output: html_document
     # configure parallel processing
     library(parallel)
     library(doParallel)
+```
+
+```
+## Warning: package 'doParallel' was built under R version 3.6.3
+```
+
+```
+## Loading required package: foreach
+```
+
+```
+## Warning: package 'foreach' was built under R version 3.6.3
+```
+
+```
+## Loading required package: iterators
+```
+
+```
+## Warning: package 'iterators' was built under R version 3.6.3
+```
+
+```r
     cluster = makeCluster(detectCores()-1) # convention to leave 1 core for OS
     registerDoParallel(cluster) # open the cluster
     modrfCtrl = trainControl(method ="cv",number=5,allowParallel=TRUE) # Configure trainControl object
@@ -148,7 +187,7 @@ output: html_document
     
     pred.train.rf = predict(modrf,TrainSet) # in sample predict
     rf.in = confusionMatrix(pred.train.rf, TrainSet$classe)$overall['Accuracy'] # in sample accuracy
-    pred.val.rf = predict(modrf,ValidSet) # cross validate      
+    predrf = predict(modrf,ValidSet) # cross validate      
     rf.out = confusionMatrix(predrf, ValidSet$classe)$overall[1] # out of sample accuracy
     predrf.test = predict(modrf, testclean) # predict test data set 
     predrf.test # print the results for test data set
@@ -212,17 +251,17 @@ output: html_document
 ```
 
 ```
-## [1]	train-merror:0.220568+0.017309	test-merror:0.233670+0.019815 
-## [101]	train-merror:0.000000+0.000000	test-merror:0.004077+0.001183 
-## [201]	train-merror:0.000000+0.000000	test-merror:0.003822+0.000946 
-## [301]	train-merror:0.000000+0.000000	test-merror:0.003567+0.000993 
-## [401]	train-merror:0.000000+0.000000	test-merror:0.003414+0.000940 
-## [501]	train-merror:0.000000+0.000000	test-merror:0.003414+0.000822 
-## [601]	train-merror:0.000000+0.000000	test-merror:0.003363+0.000795 
-## [701]	train-merror:0.000000+0.000000	test-merror:0.003312+0.000859 
-## [801]	train-merror:0.000000+0.000000	test-merror:0.003363+0.000795 
-## [901]	train-merror:0.000000+0.000000	test-merror:0.003414+0.000756 
-## [1000]	train-merror:0.000000+0.000000	test-merror:0.003312+0.000859
+## [1]	train-merror:0.227573+0.014717	test-merror:0.239628+0.015447 
+## [101]	train-merror:0.000000+0.000000	test-merror:0.003313+0.001123 
+## [201]	train-merror:0.000000+0.000000	test-merror:0.002905+0.001229 
+## [301]	train-merror:0.000000+0.000000	test-merror:0.002803+0.001123 
+## [401]	train-merror:0.000000+0.000000	test-merror:0.002803+0.001233 
+## [501]	train-merror:0.000000+0.000000	test-merror:0.002752+0.001189 
+## [601]	train-merror:0.000000+0.000000	test-merror:0.002701+0.001164 
+## [701]	train-merror:0.000000+0.000000	test-merror:0.002752+0.001273 
+## [801]	train-merror:0.000000+0.000000	test-merror:0.002650+0.001223 
+## [901]	train-merror:0.000000+0.000000	test-merror:0.002650+0.001223 
+## [1000]	train-merror:0.000000+0.000000	test-merror:0.002650+0.001223
 ```
 
 ```r
@@ -232,17 +271,17 @@ output: html_document
 ```
 ## ##### xgb.cv 10-folds
 ##     iter train_merror_mean train_merror_std test_merror_mean test_merror_std
-##        1         0.2205684      0.017309065        0.2336701    0.0198151228
-##        2         0.1514795      0.004525281        0.1695537    0.0071482439
-##        3         0.1183986      0.008148785        0.1371438    0.0096912080
-##        4         0.0911731      0.003212035        0.1093149    0.0061726043
-##        5         0.0791232      0.003616510        0.0944331    0.0080143893
+##        1         0.2275733      0.014717371        0.2396277     0.015447003
+##        2         0.1512476      0.004393218        0.1673616     0.010715601
+##        3         0.1172322      0.003473707        0.1321465     0.007949701
+##        4         0.0947293      0.004104163        0.1101822     0.009274772
+##        5         0.0811674      0.003122887        0.0968807     0.010777809
 ## ---                                                                         
-##      996         0.0000000      0.000000000        0.0032615    0.0008872664
-##      997         0.0000000      0.000000000        0.0032615    0.0008872664
-##      998         0.0000000      0.000000000        0.0032615    0.0008872664
-##      999         0.0000000      0.000000000        0.0032615    0.0008872664
-##     1000         0.0000000      0.000000000        0.0033125    0.0008591145
+##      996         0.0000000      0.000000000        0.0026502     0.001223025
+##      997         0.0000000      0.000000000        0.0026502     0.001223025
+##      998         0.0000000      0.000000000        0.0026502     0.001223025
+##      999         0.0000000      0.000000000        0.0026502     0.001223025
+##     1000         0.0000000      0.000000000        0.0026502     0.001223025
 ```
 
 ## Other modelings: Decision tree modeling (rpart) is fast but accuracy is only 53%; the basic gradient boosting took sometime with accuracy 93%; Linear Discriminant Analysis (lda) is fast, but accuracy is only 56%
@@ -258,12 +297,16 @@ output: html_document
     rpart.out = confusionMatrix(predrpart, ValidSet$classe)$overall[1] # Accuracy check
     
     # gradient boosting modeling
-    invisible(capture.output(modgbm=train(classe~.,method="gbm",data=TrainSet))) # gradient boosting
-    pred.in.gbm <- predict(modrgbm, TrainSet) # predict in sample
+    modgbm=invisible(capture.output(train(classe~.,method="gbm",data=TrainSet))) # gradient boosting
+    pred.in.gbm <- predict(modgbm, TrainSet) # predict in sample
 ```
 
 ```
-## Error in predict(modrgbm, TrainSet): object 'modrgbm' not found
+## Warning in is.constant(y): NAs introduced by coercion
+```
+
+```
+## Error in lastlevel + phi * lasttrend: non-numeric argument to binary operator
 ```
 
 ```r
@@ -276,8 +319,25 @@ output: html_document
 
 ```r
     predgbm <- predict(modgbm, ValidSet) # predict with ValidSet 
+```
+
+```
+## Warning in is.constant(y): NAs introduced by coercion
+```
+
+```
+## Error in lastlevel + phi * lasttrend: non-numeric argument to binary operator
+```
+
+```r
     gbm.out = confusionMatrix(predgbm, ValidSet$classe)$overall[1] # Accuracy check
-    
+```
+
+```
+## Error in confusionMatrix.default(predgbm, ValidSet$classe): the data cannot have more levels than the reference
+```
+
+```r
     #  Linear Discriminant Analysis
     modlda=train(classe~.,method="lda",data=TrainSet) 
     pred.in.lda <- predict(modlda, TrainSet) # predict in sample
@@ -298,11 +358,18 @@ InAccuracy = c(rf.in,rpart.in,gbm.in,lda.in)
 
 ```r
 OutAccuracy =c(rf.out,rpart.out,gbm.out,lda.out)
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'gbm.out' not found
+```
+
+```r
 knitr::kable(data.frame(Model=names(OutAccuracy),InSampleAccuracy=paste0(round(InAccuracy*100,2),"%"),OutofSampleAccuracy=paste0(round(OoutAccuracy*100,2),"%"), OutofSampleError=paste0(round((1-OutAccuracy)*100,2),"%")))
 ```
 
 ```
-## Error in paste0(round(InAccuracy * 100, 2), "%"): object 'InAccuracy' not found
+## Error in data.frame(Model = names(OutAccuracy), InSampleAccuracy = paste0(round(InAccuracy * : object 'OutAccuracy' not found
 ```
 
 ## Inclusion, both XGBoost and Random Forest modelig provide higher in sample and out of sample accuracy than other modeling (decision tree, basic gradient boosting, Linear Discriminant Analysis, etc.), but XGBoost modeling is way faster. So I'll choose XBGoost modeling to predict the test data set. The prediction result is listed below, which passed the final quiz with 100% score.
